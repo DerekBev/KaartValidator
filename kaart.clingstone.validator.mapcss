@@ -33,11 +33,19 @@ way[oneway=-1] {
 }
 @supports (min-josm-version: 14802) {
 /* Check that roads have surfaces */
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   way[highway=~/^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000],
   way[highway=~/^.*_link$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwWarning: tr("Missing surface on a road");
   }
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
   way[highway=~/^(service|living_street)$/][!surface][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwOther: tr("Missing surface on a minor road");
@@ -48,11 +56,17 @@ way[oneway=-1] {
     group: tr("kaart");
     throwWarning: tr("Generic paved surface on road");
   }
-  /* Check that roads have lanes */
+
+
+
+  /* Check that roads have lanes *//* * * * * * * * * * * * * * * * *
   way[highway=~/^(motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link|tertiary_link)$/][!lanes][surface!~/^(gravel|ground)$/][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
     throwWarning: tr("Missing lanes on road");
   }
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
 
   /* Check for bad lanes */
   way[highway][lanes=0] {
@@ -274,6 +288,8 @@ way[highway=~/^.*_link$/][noname] {
     group: tr("kaart");
     throwWarning: tr("A highway crossing does not have a crossing type");
   }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
   node[highway=crossing][crossing][crossing!~/^(traffic_signals|uncontrolled|no|unmarked|zebra|pelican|tiger|toucan|pegasus|island)$/][gpx_distance() < 30 || gpx_distance() >= 50000000]:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("A highway crossing is using an unknown crossing type ({0})", tag("crossing"));
@@ -283,6 +299,7 @@ way[highway=~/^.*_link$/][noname] {
     assertNoMatch: "node highway=crossing crossing=no";
     /* assertMatch: "node highway=crossing crossing=bad_crossing"; TODO figure out why this errors */
   }
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
   node[highway=crossing][crossing=island][gpx_distance() < 30 || gpx_distance() >= 50000000] {
     group: tr("kaart");
@@ -604,11 +621,14 @@ way[highway][highway!~/^(footway|cycleway)$/][oneway=yes] > node { set .possible
     throwWarning: tr("Possible pedestrian crossing");
     suggestAlternative: tr("highway=footway, footway=crossing");
   }
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   node[!inside("GR")][gpx_distance() < 30 || gpx_distance() >= 50000000].crossing_node.possible_divided_highway!.footway_crossing:in-downloaded-area {
     group: tr("kaart");
     throwWarning: tr("Maybe add a pedestrian crossing here");
     suggestAlternative: tr("highway=footway, footway=crossing");
   }
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 }
 
 /* Check for traffic signals with directions */
@@ -861,7 +881,9 @@ node[count(parent_tags("destination:ref")) != count(parent_tags("destination:ref
   /*fixAdd: concat("destination:ref=", parent_tag("ref"));*/
 }
 
-/* Check if link has destination:{ref|street} */
+
+
+/* Check if link has destination:{ref|street} *//* * * * * * * * * * * * * * * * *
 way[highway][highway=~/.*_link$/][!destination:street][!destination:ref][oneway=yes] > node { set .link_no_ref }
 
 node[!destination:street][!destination:ref].link_no_ref.has_ref,
@@ -883,6 +905,9 @@ way[highway][highway=~/.*_link$/][!/destination:street:(forward|backward)/][!/de
   assertNoMatch: "way highway=motorway_link destination:street:forward=M22 oneway=no";
   assertNoMatch: "way highway=motorway_link oneway=yes";
 }
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
 
 /* Check for destination:street that is the same as the name of the street */
 way[highway][name][destination:street][tag("name") == tag("destination:street")] {
